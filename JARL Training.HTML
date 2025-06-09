@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Competency Assessment</title>
+  <meta name="viewport" content="width=1200">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      color: #222;
+      font-size: 15px;
+    }
+    .container {
+      margin: 0 auto;
+      width: 96vw;
+      min-width: 1200px;
+      max-width: 1800px;
+      background: #fff;
+      padding: 0 0 40px 0;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 36px 0 36px;
+    }
+    .title {
+      font-size: 2em;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .assessment-cycle {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .assessment-cycle select {
+      font-size: 1em;
+      padding: 0.5em 1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .assessment-table-wrapper {
+      overflow-x: auto;
+      width: 100%;
+      margin-top: 18px;
+    }
+    .assessment-table {
+      margin: 0 auto;
+      background: #fff;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1800px;
+      width: 92vw;
+      max-width: 1700px;
+      box-shadow: 0 2px 14px #e6e6e6;
+      border-radius: 8px;
+      font-size: 15px;
+      table-layout: fixed;
+    }
+    .section-header-blue,
+    .category-row-blue td {
+      background: #dbeafe !important;
+      color: #1e40af !important;
+      text-align: center;
+      font-size: 1.12em;
+      font-weight: 600;
+      padding: 16px 0 8px 0;
+    }
+    .section-header-blue {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      font-size: 1.23em;
+    }
+    .category-row-blue td { border-bottom: 1px solid #eaeaea; }
+    .category-row-blue td {
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+      word-break: break-word !important;
+      line-height: 1.2;
+      text-align: center;
+      vertical-align: middle;
+      padding: 12px 8px 8px 8px;
+    }
+    .partition {
+      background: #b4d1fa !important;
+      width: 8px;
+      min-width: 8px;
+      max-width: 8px;
+      border: none;
+      padding: 0 !important;
+    }
+    .partition-empty {
+      background: transparent !important;
+      border: none;
+      min-width: 8px;
+      padding: 0;
+    }
+    .percent-row td {
+      background: #f8fafc;
+      color: #222;
+      font-weight: 700;
+      text-align: center;
+      font-size: 1.08em;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      white-space: nowrap;
+    }
+    .user-row {
+      background: #fff;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .employee-label-cell {
+      background: #f7fafc;
+      min-width: 250px;
+      max-width: 290px;
+      width: 270px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 1.15em;
+      border-right: 1px solid #e3e3e3;
+      padding: 0;
+      vertical-align: middle;
+    }
+    .user-ident {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0 14px 12px;
+    }
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      background: #e6f0fa;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.22em;
+      color: #222;
+      border: 2px solid #c3ddf7;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px #e3eaf7;
+    }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      margin-left: 0;
+      gap: 0px;
+      min-width: 0;
+    }
+    .user-info span:first-child {
+      font-weight: 600;
+      font-size: 1.09em;
+      color: #1e293b;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 172px;
+    }
+    .user-info span:nth-child(2) {
+      font-size: 0.98em;
+      color: #3b82f6;
+      font-weight: 500;
+      margin-bottom: 1px;
+      letter-spacing: 0.01em;
+    }
+    .user-info span:nth-child(3) {
+      font-size: 0.95em;
+      color: #64748b;
+      font-weight: 400;
+    }
+    .score-cell {
+      font-weight: 700;
+      font-size: 1.12em;
+      color: #CF9B39;
+      text-align: right !important;
+      white-space: nowrap;
+      padding-right: 24px !important;
+      padding-left: 12px !important;
+      vertical-align: bottom !important;
+    }
+    .assessment-circles {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+    }
+    .circle-btn {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 2px solid #bbb;
+      background: #fff;
+      display: inline-block;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      outline: none;
+      transition: box-shadow 0.12s;
+    }
+    .circle-btn:focus { box-shadow: 0 0 0 2px #93e9be; }
+    .circle-btn.blank {
+      background: #fff;
+      border: 2px solid #bbb;
+    }
+    .circle-btn.green {
+      background: #34c759;
+      border: 2px solid #34c759;
+    }
+    .circle-box {
+      padding: 0 5px;
+      border: 2px solid #888;
+      border-radius: 2px;
+      margin: 0 2px;
+      display: inline-block;
+      background: #fff;
+      min-width: 26px;
+      min-height: 17px;
+    }
+    th, td {
+      min-width: 125px;
+      max-width: 188px;
+      word-break: keep-all;
+      font-size: 15px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .assessment-table th:last-child,
+    .assessment-table .section-header-blue:last-child,
+    .assessment-table .score-cell {
+      text-align: right !important;
+      padding-right: 24px !important;
+      padding-left: 12px !important;
+      vertical-align: bottom !important;
+    }
+    .dropdown-select {
+      width: 320px;
+      max-width: 90vw;
+    }
+    .button-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 24px;
+      margin: 40px 5vw 0 0;
+      padding-bottom: 16px;
+    }
+    .action-btn {
+      font-size: 1.12em;
+      padding: 12px 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      background: #2563eb;
+      color: #fff;
+      transition: background 0.15s;
+      box-shadow: 0 2px 8px #e0e7ef33;
+      letter-spacing: .2px;
+    }
+    .action-btn.back {
+      background: #64748b;
+      margin-right: 8px;
+    }
+    .action-btn.submit {
+      background: #2563eb;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 8px;
+    }
+    .action-btn[disabled], .action-btn.submit[disabled] {
+      background: #c8d6f8 !important;
+      color: #fff !important;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .action-btn.development {
+      background: #2563eb;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 8px;
+    }
+    .action-btn:hover:not([disabled]) {
+      background: #1d4ed8;
+    }
+    .action-btn.back:hover {
+      background: #334155;
+    }
+    /* ----- MODAL: Development Needs ----- */
+    .modal-overlay,
+    .modal-overlay-def,
+    .modal-overlay-devneeds {
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.24);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 40px;
+      animation: fadeIn 0.2s;
+    }
+    .modal-content,
+    .modal-content-def,
+    .modal-content-devneeds {
+      background: #fff;
+      border-radius: 12px;
+      min-width: 640px;
+      max-width: 720px;
+      width: 100%;
+      box-shadow: 0 4px 40px #0002;
+      overflow: auto;
+      padding-bottom: 38px;
+      animation: slideDown 0.2s;
+    }
+    .modal-top-bar,
+    .modal-top-bar-def,
+    .modal-top-bar-devneeds {
+      background: #bda062;
+      color: #fff;
+      padding: 18px 32px 18px 32px;
+      font-size: 1.3em;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      border-radius: 12px 12px 0 0;
+      position: relative;
+    }
+    .modal-close,
+    .modal-close-def,
+    .modal-close-devneeds {
+      float: right;
+      font-size: 1.4em;
+      font-weight: 700;
+      color: #fff;
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+      position: absolute;
+      right: 18px;
+      top: 12px;
+    }
+    /* Development Needs Table */
+    .dev-table {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 14px #e6e6e6;
+      min-width: 540px;
+      max-width: 680px;
+      width: 650px;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      margin: 32px auto;
+    }
+    .dev-table th, .dev-table td {
+      font-size: 1em;
+      padding: 15px 10px;
+      text-align: left;
+      border-bottom: 1px solid #ececec;
+      background: #fff;
+    }
+    .dev-table th {
+      background: #faf9f6;
+      font-size: 1.07em;
+      font-weight: 700;
+      padding: 17px 10px;
+    }
+    .dev-table td.action-col {
+      text-align: center;
+    }
+    /* Proficiency icons for dev needs */
+    .proficiency-icons-devneed {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .prof-box {
+      width: 28px;
+      height: 28px;
+      border-radius: 5px;
+      border: 2px solid #bbb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2em;
+      font-weight: 700;
+      margin: 0 2px;
+      background: #fff;
+      color: #bbb;
+    }
+    .prof-box.green {
+      background: #e8f8ee;
+      color: #34c759;
+      border-color: #34c759;
+    }
+    .prof-box.red {
+      background: #fae4e6;
+      color: #e74c3c;
+      border-color: #e74c3c;
+    }
+    .prof-box.gray {
+      background: #f3f4f7;
+      color: #aaa;
+      border-color: #bbb;
+    }
+    .prof-box.selected {
+      box-shadow: 0 0 0 2.5px #bda062;
+      font-weight: 700;
+    }
+    /* IDP Button */
+    .idp-btn {
+      font-size: 1em;
+      padding: 9px 22px;
+      border-radius: 6px;
+      border: 2px solid #d7c08d;
+      background: #f6f2e7;
+      color: #a1843d;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s, border 0.12s;
+      min-width: 60px;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .idp-btn:disabled,
+    .idp-btn.disabled {
+      background: #f5f5f5 !important;
+      color: #aaa !important;
+      border: 2px solid #eee !important;
+      cursor: not-allowed;
+    }
+    /* Modal */
+    .modal-main-content,
+    .modal-main-content-def {
+      margin: 32px 0 0 32px;
+      display: flex;
+    }
+    /* Modal for competency assessment ... unchanged ... */
+    .competency-modal-content {
+      background: #fff;
+      border-radius: 10px;
+      min-width: 320px;
+      max-width: 95vw;
+      width: 98vw;
+      box-shadow: 0 4px 40px #0002;
+      padding-bottom: 38px;
+      font-size: 17px;
+      animation: slideDown 0.2s;
+      margin: 0 auto;
+    }
+    .competency-modal-header {
+      background: #bda062;
+      color: #fff;
+      padding: 18px 32px 18px 32px;
+      font-size: 1.25em;
+      font-weight: 700;
+      border-radius: 10px 10px 0 0;
+      letter-spacing: 0.02em;
+      position: relative;
+    }
+    .competency-modal-close {
+      float: right;
+      font-size: 1.4em;
+      font-weight: 700;
+      color: #fff;
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+      position: absolute;
+      right: 18px;
+      top: 14px;
+    }
+    .competency-modal-body {
+      padding: 32px 40px 32px 40px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .comp-main-title {
+      font-size: 2em;
+      font-weight: 700;
+      margin: 0 0 3px 0;
+      color: #222;
+      word-break: break-word;
+    }
+    .comp-main-desc {
+      font-size: 1.18em;
+      color: #757575;
+      margin-bottom: 24px;
+      font-weight: 400;
+      word-break: break-word;
+    }
+    .comp-sub-title {
+      font-size: 1.21em;
+      font-weight: 700;
+      margin: 8px 0 2px 0;
+      color: #222;
+      word-break: break-word;
+    }
+    .comp-sub-desc {
+      font-size: 1.12em;
+      color: #666;
+      font-weight: 400;
+      margin-bottom: 32px;
+      word-break: break-word;
+    }
+    .comp-percent {
+      font-size: 1.25em;
+      font-weight: 700;
+      color: #222;
+      position: absolute;
+      right: 45px;
+      top: 95px;
+    }
+    .comp-scale-title {
+      font-size: 1.08em;
+      font-weight: 600;
+      margin: 12px 0 8px 0;
+      color: #222;
+    }
+    .comp-scale-group {
+      margin-top: 18px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 1.08em;
+    }
+    .scale-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0;
+    }
+    .scale-radio {
+      width: 22px;
+      height: 22px;
+      accent-color: #bda062;
+      margin: 0 7px 0 0;
+    }
+    .scale-radio:checked {
+      accent-color: #bda062;
+    }
+    .scale-label-main {
+      font-size: 1.13em;
+      font-weight: 600;
+      color: #222;
+      min-width: 22px;
+      display: inline-block;
+    }
+    .scale-label-sub {
+      color: #575757;
+      font-size: 1.05em;
+      font-weight: 400;
+      margin-left: 7px;
+    }
+    .modal-btn-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 24px;
+      margin-top: 44px;
+      margin-right: 15px;
+    }
+    .modal-btn-cancel {
+      font-size: 1.08em;
+      padding: 10px 26px;
+      border-radius: 6px;
+      border: 2px solid #cdb982;
+      background: #fff;
+      color: #bda062;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background 0.11s;
+    }
+    .modal-btn-save {
+      font-size: 1.12em;
+      padding: 12px 36px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: #bda062;
+      color: #fff;
+      transition: background 0.15s;
+      margin-left: 5px;
+      box-shadow: 0 2px 8px #e0e7ef33;
+      letter-spacing: .2px;
+    }
+    .modal-btn-save:active {
+      background: #bda062;
+      color: #fff;
+    }
+    .modal-btn-cancel:active {
+      background: #fff;
+      color: #bda062;
+    }
+    @media (max-width: 900px) {
+      .competency-modal-content {max-width: 99vw;}
+      .competency-modal-body {padding: 18px 5vw;}
+      .comp-percent {position: static; float: right; right: 0; top: 0;}
+    }
+    @media (max-width: 600px) {
+      .competency-modal-content {max-width: 99vw;}
+      .competency-modal-body {padding: 18px 2vw;}
+      .comp-main-title, .comp-sub-title {font-size: 1.1em;}
+      .comp-main-desc, .comp-sub-desc {font-size: 1em;}
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-24px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+  <script>
+    // ... same JS as before for all assessment logic, with additions for Development Needs Modal ...
+    const competencyData = {
+      "Judgement": {
+        definition: "Thinks broadly and deeply, balancing big-picture and detail to choose optimal, sustainable decisions",
+        percent: "25%",
+        subs: {
+          "Managing Ambiguity": "Seeks clarity by asking questions and focuses on completing tasks",
+          "Decision Making": "Collects required information and evaluates options to decide",
+          "Business Appreciation": "Understands how their role impacts team or project objectives.",
+          "Strategic Mindset": "Focuses on tasks with long-term goals in mind.",
+        }
+      },
+      "Achievement Orientation": {
+        definition: "Passionate about making a difference and makes things happen; is ambitious, result focused and resilient",
+        percent: "25%",
+        subs: {
+          "Driving Ambitious Goals": "Sets stretch goals for personal development and completion of tasks.",
+          "Accountability": "Delivers assigned outcomes and takes ownership of personal results",
+          "Operational Excellence": "Plans and executes tasks efficiently, ensuring optimal use of resources.",
+          "Being Resilient": "Remains calm under pressure and bounces back from minor setbacks.",
+        }
+      },
+      "Relationship": {
+        definition: "Develops deep relationships across the organization, is able to influence vertically and horizontally",
+        percent: "25%",
+        subs: {
+          "Managing Conflicts": "Resolves simple disputes constructively using active listening.",
+          "Interpersonal Communication": "Communicates clearly and confidently in routine interactions, ensuring messages are coherent and well-understood",
+          "Collaboration": "Cooperates with peers to achieve common goals.",
+          "Developing Teams": "Contributes to team development by actively engaging in peer learning",
+        }
+      },
+      "Learning Agility": {
+        definition: "The ability to quickly assimilate and applies new learning and returns to exceptional performance in this digital age",
+        percent: "25%",
+        subs: {
+          "Improvement Orientation": "Actively requests feedback for personal improvement and applies it diligently.",
+          "Adaptability": "Quickly adjusts to new tasks or tools with minimal disruption.",
+          "Innovation": "Suggests creative ideas to address recurring challenges.",
+          "Tech Savviness (Digital Mindset)": "Proactively learns new digital tools to enhance personal efficiency.",
+          "Digital Mindset": "Proactively learns new digital tools to enhance personal efficiency."
+        }
+      }
+    };
+    const subCompetencyPercents = {
+      "Managing Ambiguity": "6%",
+      "Decision Making": "7%",
+      "Business Appreciation": "6%",
+      "Strategic Mindset": "6%",
+      "Driving Ambitious Goals": "6%",
+      "Accountability": "6%",
+      "Operational Excellence": "7%",
+      "Being Resilient": "6%",
+      "Managing Conflicts": "6%",
+      "Interpersonal Communication": "6%",
+      "Collaboration": "7%",
+      "Developing Teams": "6%",
+      "Improvement Orientation": "6%",
+      "Adaptability": "6%",
+      "Innovation": "6%",
+      "Tech Savviness (Digital Mindset)": "7%",
+      "Digital Mindset": "7%"
+    };
+    const subToMainMap = {
+      "Managing Ambiguity": "Judgement",
+      "Decision Making": "Judgement",
+      "Business Appreciation": "Judgement",
+      "Strategic Mindset": "Judgement",
+      "Driving Ambitious Goals": "Achievement Orientation",
+      "Accountability": "Achievement Orientation",
+      "Operational Excellence": "Achievement Orientation",
+      "Being Resilient": "Achievement Orientation",
+      "Managing Conflicts": "Relationship",
+      "Interpersonal Communication": "Relationship",
+      "Collaboration": "Relationship",
+      "Developing Teams": "Relationship",
+      "Improvement Orientation": "Learning Agility",
+      "Adaptability": "Learning Agility",
+      "Innovation": "Learning Agility",
+      "Tech Savviness (Digital Mindset)": "Learning Agility",
+      "Digital Mindset": "Learning Agility"
+    };
+    let savedProficiencies = {};
+    let currentModalSubComp = null;
+    let currentModalUserKey = null;
+    let isSubmitted = false;
+    const subComps = [
+      "Managing Ambiguity","Decision Making","Business Appreciation","Strategic Mindset",
+      "Driving Ambitious Goals","Accountability","Operational Excellence","Being Resilient",
+      "Managing Conflicts","Interpersonal Communication","Collaboration","Developing Teams",
+      "Improvement Orientation","Adaptability","Innovation","Tech Savviness (Digital Mindset)"
+    ];
+    const userKeys = ["self", "manager"];
+
+    function openDevelopmentNeeds() {
+      renderDevNeedsTable();
+      document.getElementById('devNeedsModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDevelopmentNeeds() {
+      document.getElementById('devNeedsModal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    function openCompetencyModal(main, sub, userKey) {
+      const comp = competencyData[main];
+      document.getElementById('comp-main-title').innerText = main;
+      document.getElementById('comp-main-desc').innerText = comp.definition;
+      document.getElementById('comp-sub-title').innerText = sub;
+      document.getElementById('comp-sub-desc').innerText = comp.subs[sub] || "";
+      document.getElementById('comp-percent').innerText = subCompetencyPercents[sub] || "";
+
+      // Set the radio to the saved value if present
+      const radios = document.getElementsByName('comp-scale');
+      let val = (savedProficiencies[userKey] && savedProficiencies[userKey][sub]) ? savedProficiencies[userKey][sub].value : null;
+      if (radios) {
+        for (const r of radios) {
+          r.checked = (val && String(val) === r.value);
+        }
+      }
+      currentModalSubComp = sub;
+      currentModalUserKey = userKey;
+      document.getElementById('comp-modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCompetencyModal() {
+      document.getElementById('comp-modal').style.display = 'none';
+      document.body.style.overflow = '';
+      currentModalSubComp = null;
+      currentModalUserKey = null;
+    }
+    function handleCompetencyBlankClick(subComp, userKey) {
+      const main = subToMainMap[subComp];
+      openCompetencyModal(main, subComp, userKey);
+    }
+    function saveCompetencyModal() {
+      if (!currentModalSubComp || !currentModalUserKey) return closeCompetencyModal();
+      // Get scale value
+      const radios = document.getElementsByName('comp-scale');
+      let selected = null;
+      for (const r of radios) if (r.checked) selected = r.value;
+      if (!selected) {
+        alert("Please select a scale value to save.");
+        return;
+      }
+      if (!savedProficiencies[currentModalUserKey]) savedProficiencies[currentModalUserKey] = {};
+      savedProficiencies[currentModalUserKey][currentModalSubComp] = { value: selected };
+      updateProficiencyCircle(currentModalSubComp, currentModalUserKey);
+      updateSubmitButtonState();
+      closeCompetencyModal();
+    }
+    function updateProficiencyCircle(subComp, userKey) {
+      document.querySelectorAll(
+        `.user-row[data-user="${userKey}"] .circle-btn[data-subcomp="${CSS.escape(subComp)}"]`
+      ).forEach(btn => {
+        btn.classList.remove('blank');
+        btn.classList.add('green');
+      });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.user-row').forEach((row, idx) => {
+        row.setAttribute('data-user', userKeys[idx]);
+      });
+      document.querySelectorAll('.user-row').forEach((row, rowIdx) => {
+        let btns = row.querySelectorAll('.circle-btn');
+        btns.forEach(function(btn, i) {
+          if (subComps[i % subComps.length]) {
+            btn.setAttribute('data-subcomp', subComps[i % subComps.length]);
+            btn.setAttribute('data-user', userKeys[rowIdx]);
+            btn.onclick = function() { handleCompetencyBlankClick(subComps[i % subComps.length], userKeys[rowIdx]); };
+          }
+        });
+      });
+      updateSubmitButtonState();
+    });
+    function updateSubmitButtonState() {
+      if (isSubmitted) {
+        document.getElementById('submit-btn').textContent = 'Development Need';
+        document.getElementById('submit-btn').className = 'action-btn development';
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('submit-btn').onclick = openDevelopmentNeeds;
+        return;
+      }
+      let allFilled = true;
+      for (let user of userKeys) {
+        for (let sub of subComps) {
+          if (!savedProficiencies[user] || !savedProficiencies[user][sub]) {
+            allFilled = false;
+            break;
+          }
+        }
+      }
+      if (allFilled) {
+        document.getElementById('submit-btn').disabled = false;
+      } else {
+        document.getElementById('submit-btn').disabled = true;
+      }
+      document.getElementById('submit-btn').textContent = 'Submit';
+      document.getElementById('submit-btn').className = 'action-btn submit';
+      document.getElementById('submit-btn').onclick = function() {
+        if (this.disabled) return;
+        isSubmitted = true;
+        updateSubmitButtonState();
+      }
+    }
+
+    // DEV NEEDS MODAL LOGIC
+    function renderDevNeedsTable() {
+      const tbody = [];
+      for (let sub of subComps) {
+        // Manager's value
+        let val = (savedProficiencies['manager'] && savedProficiencies['manager'][sub]) ? parseInt(savedProficiencies['manager'][sub].value) : null;
+        // Build proficiency boxes
+        let profBoxes = '';
+        for (let i = 1; i <= 4; ++i) {
+          let css = "prof-box";
+          if (val === i) css += (i >= 3 ? " green selected" : " red selected");
+          else if (val == null) css += " gray";
+          else css += (i >= 3 ? " green" : " red");
+          // Use question icon for all
+          let ic = `<span style="font-size:1.1em;">?</span>`;
+          profBoxes += `<span class="${css}">${ic}</span>`;
+        }
+        // IDP button logic: only enabled if manager's value is 1 or 2
+        let idpBtn;
+        if (val === 1 || val === 2) {
+          idpBtn = `<button class="idp-btn">IDP</button>`;
+        } else {
+          idpBtn = `<button class="idp-btn disabled" disabled>IDP</button>`;
+        }
+        tbody.push(`
+        <tr>
+          <td>${sub}</td>
+          <td><span class="proficiency-icons-devneed">${profBoxes}</span></td>
+          <td class="action-col">${idpBtn}</td>
+        </tr>
+        `);
+      }
+      document.getElementById('devNeedsTableBody').innerHTML = tbody.join('');
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="title">Competency Assessment</span>
+      <span class="assessment-cycle">
+        Assessment Cycle
+        <select class="dropdown-select" disabled>
+          <option>Behavioral Competency Management (27 Jan, 2025 - 31 Dec, 2025)</option>
+        </select>
+      </span>
+    </div>
+    <div class="assessment-table-wrapper">
+      <table class="assessment-table">
+        <tr>
+          <td class="employee-label-cell"></td>
+          <td colspan="4" class="section-header-blue">Judgement (25)%</td>
+          <td class="partition"></td>
+          <td colspan="4" class="section-header-blue">Achievement Orientation (25)%</td>
+          <td class="partition"></td>
+          <td colspan="4" class="section-header-blue">Relationship (25)%</td>
+          <td class="partition"></td>
+          <td colspan="4" class="section-header-blue">Learning Agility (25)%</td>
+          <td class="section-header-blue">Assessment Score</td>
+        </tr>
+        <tr class="category-row-blue">
+          <td class="employee-label-cell"></td>
+          <td>Managing Ambiguity</td>
+          <td>Decision Making</td>
+          <td>Business Appreciation</td>
+          <td>Strategic Mindset</td>
+          <td class="partition"></td>
+          <td>Driving Ambitious Goals</td>
+          <td>Accountability</td>
+          <td>Operational Excellence</td>
+          <td>Being Resilient</td>
+          <td class="partition"></td>
+          <td>Managing Conflicts</td>
+          <td>Interpersonal Communication</td>
+          <td>Collaboration</td>
+          <td>Developing Teams</td>
+          <td class="partition"></td>
+          <td>Improvement Orientation</td>
+          <td>Adaptability</td>
+          <td>Innovation</td>
+          <td>Tech Savviness (Digital Mindset)</td>
+          <td class="partition-empty"></td>
+        </tr>
+        <tr class="percent-row">
+          <td class="employee-label-cell"></td>
+          <td>6%</td>
+          <td>7%</td>
+          <td>6%</td>
+          <td>6%</td>
+          <td class="partition"></td>
+          <td>6%</td>
+          <td>6%</td>
+          <td>7%</td>
+          <td>6%</td>
+          <td class="partition"></td>
+          <td>6%</td>
+          <td>6%</td>
+          <td>7%</td>
+          <td>6%</td>
+          <td class="partition"></td>
+          <td>6%</td>
+          <td>6%</td>
+          <td>6%</td>
+          <td>7%</td>
+          <td class="partition-empty"></td>
+        </tr>
+        <tr class="user-row">
+          <td class="employee-label-cell">
+            <div class="user-ident">
+              <span class="user-avatar">AL</span>
+              <div class="user-info">
+                <span title="Alice Langdon">Alice Langdon</span>
+                <span>Self</span>
+                <span>EMP-53412</span>
+              </div>
+            </div>
+          </td>
+          <!-- Judgement -->
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td class="partition"></td>
+          <!-- Achievement -->
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td class="partition"></td>
+          <!-- Relationship -->
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td class="partition"></td>
+          <!-- Learning Agility -->
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td></td>
+          <td class="score-cell" rowspan="2" style="vertical-align: bottom;">3.69</td>
+        </tr>
+        <tr class="user-row">
+          <td class="employee-label-cell">
+            <div class="user-ident">
+              <span class="user-avatar">MR</span>
+              <div class="user-info">
+                <span title="Michael Rivers">Michael Rivers</span>
+                <span>Manager</span>
+                <span>EMP-90723</span>
+              </div>
+            </div>
+          </td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td class="partition"></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td class="partition"></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td class="partition"></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td><div class="assessment-circles"><button class="circle-btn blank"></button></div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="22"></td>
+          <td class="score-cell" style="vertical-align: bottom;">2.87</td>
+        </tr>
+      </table>
+    </div>
+    <div class="button-row">
+      <button class="action-btn back">Back</button>
+      <button id="submit-btn" class="action-btn submit" disabled>Submit</button>
+    </div>
+    <!-- Competency Definition Modal -->
+    <div id="comp-modal" class="modal-overlay-def" style="display:none;">
+      <div class="competency-modal-content">
+        <div class="competency-modal-header">
+          Competency Assessment
+          <button class="competency-modal-close" onclick="closeCompetencyModal()" title="Close">&times;</button>
+        </div>
+        <div class="competency-modal-body">
+          <div class="comp-main-title" id="comp-main-title">Judgement</div>
+          <div class="comp-main-desc" id="comp-main-desc">Definition goes here.</div>
+          <div class="comp-sub-title" id="comp-sub-title">Managing Ambiguity</div>
+          <div class="comp-sub-desc" id="comp-sub-desc">Indicator goes here.</div>
+          <div class="comp-percent" id="comp-percent"></div>
+          <div class="comp-scale-title">Scale</div>
+          <div class="comp-scale-group">
+            <label class="scale-option"><input type="radio" class="scale-radio" name="comp-scale" value="1"><span class="scale-label-main">1</span><span class="scale-label-sub">Rarely</span></label>
+            <label class="scale-option"><input type="radio" class="scale-radio" name="comp-scale" value="2"><span class="scale-label-main">2</span><span class="scale-label-sub">Sometimes</span></label>
+            <label class="scale-option"><input type="radio" class="scale-radio" name="comp-scale" value="3"><span class="scale-label-main">3</span><span class="scale-label-sub">Frequently</span></label>
+            <label class="scale-option"><input type="radio" class="scale-radio" name="comp-scale" value="4"><span class="scale-label-main">4</span><span class="scale-label-sub">Consistently</span></label>
+          </div>
+          <div class="modal-btn-row">
+            <button class="modal-btn-cancel" onclick="closeCompetencyModal()">Cancel</button>
+            <button class="modal-btn-save" onclick="saveCompetencyModal()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Development Needs Modal -->
+    <div id="devNeedsModal" class="modal-overlay-devneeds" style="display:none;">
+      <div class="modal-content-devneeds">
+        <div class="modal-top-bar-devneeds">
+          Development Needs
+          <button class="modal-close-devneeds" onclick="closeDevelopmentNeeds()" title="Close">&times;</button>
+        </div>
+        <div>
+          <table class="dev-table">
+            <tr>
+              <th>Competency</th>
+              <th>Proficiency</th>
+              <th class="action-col">Action</th>
+            </tr>
+            <tbody id="devNeedsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
